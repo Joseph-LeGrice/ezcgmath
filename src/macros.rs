@@ -1,0 +1,112 @@
+
+macro_rules! impl_operators {
+    ($type: ty, $($field:tt),+) => {
+        impl Add for $type {
+            type Output = Self;
+
+            fn add(self, rhs: Self) -> Self {
+                let mut result = Self::default();
+                $(result.$field += rhs.$field;)+
+                result
+            }
+        }
+
+        impl AddAssign for $type {
+            fn add_assign(&mut self, rhs: Self) {
+                $(self.$field += rhs.$field;)+
+            }
+        }
+
+        impl Sub for $type {
+            type Output = Self;
+
+            fn sub(self, rhs: $type) -> Self {
+                let mut result = Self::default();
+                $(result.$field -= rhs.$field;)+
+                result
+            }
+        }
+
+        impl SubAssign for $type {
+            fn sub_assign(&mut self, rhs: $type) {
+                $(self.$field -= rhs.$field;)+
+            }
+        }
+
+        impl Mul<Scalar> for $type {
+            type Output = Self;
+
+            fn mul(self, rhs: Scalar) -> Self {
+                let mut result = Self::default();
+                $(result.$field *= rhs;)+
+                result
+            }
+        }
+
+        impl MulAssign<Scalar> for $type {
+            fn mul_assign(&mut self, rhs: Scalar) {
+                $(self.$field *= rhs;)+
+            }
+        }
+
+        impl Div<Scalar> for $type {
+            type Output = Self;
+
+            fn div(self, rhs: Scalar) -> Self::Output {
+                let mut result = Self::default();
+                $(result.$field /= rhs;)+
+                result
+            }
+        }
+
+        impl DivAssign<Scalar> for $type {
+            fn div_assign(&mut self, rhs: Scalar) {
+                $(self.$field /= rhs;)+
+            }
+        }
+    }
+}
+
+macro_rules! impl_approx {
+    ($type: ty, $($field:tt),+) => {
+        impl approx::AbsDiffEq for $type
+        {
+            type Epsilon = crate::Scalar;
+
+            fn default_epsilon() -> Self::Epsilon {
+                Scalar::default_epsilon()
+            }
+
+            fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
+                let mut result = true;
+                $( result &= Scalar::abs_diff_eq(&self.$field, &other.$field, epsilon); )+
+                result
+            }
+        }
+
+        impl approx::RelativeEq for $type
+        {
+            fn default_max_relative() -> Self::Epsilon {
+                Self::Epsilon::default_max_relative()
+            }
+
+            fn relative_eq(&self, other: &Self, epsilon: Self::Epsilon, max_relative: Self::Epsilon) -> bool {
+                let mut result = true;
+                $( result &= Self::Epsilon::relative_eq(&self.$field, &other.$field, epsilon, max_relative); )+
+                result
+            }
+        }
+
+        impl approx::UlpsEq for $type {
+            fn default_max_ulps() -> u32 {
+                Scalar::default_max_ulps()
+            }
+
+            fn ulps_eq(&self, other: &Self, epsilon: Self::Epsilon, max_ulps: u32) -> bool {
+                let mut result = true;
+                $( result &= Self::Epsilon::ulps_eq(&self.$field, &other.$field, epsilon, max_ulps); )+
+                result
+            }
+        }
+    };
+}
