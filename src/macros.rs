@@ -1,7 +1,6 @@
-
 macro_rules! impl_operators {
     ($type: ty, $($field:tt),+) => {
-        impl Add for $type {
+        impl std::ops::Add for $type {
             type Output = Self;
 
             fn add(self, rhs: Self) -> Self {
@@ -11,13 +10,13 @@ macro_rules! impl_operators {
             }
         }
 
-        impl AddAssign for $type {
+        impl std::ops::AddAssign for $type {
             fn add_assign(&mut self, rhs: Self) {
                 $(self.$field += rhs.$field;)+
             }
         }
 
-        impl Sub for $type {
+        impl std::ops::Sub for $type {
             type Output = Self;
 
             fn sub(self, rhs: $type) -> Self {
@@ -27,40 +26,40 @@ macro_rules! impl_operators {
             }
         }
 
-        impl SubAssign for $type {
+        impl std::ops::SubAssign for $type {
             fn sub_assign(&mut self, rhs: $type) {
                 $(self.$field -= rhs.$field;)+
             }
         }
 
-        impl Mul<Scalar> for $type {
+        impl std::ops::Mul<crate::Scalar> for $type {
             type Output = Self;
 
-            fn mul(self, rhs: Scalar) -> Self {
+            fn mul(self, rhs: crate::Scalar) -> Self {
                 let mut result = Self::default();
                 $(result.$field *= rhs;)+
                 result
             }
         }
 
-        impl MulAssign<Scalar> for $type {
-            fn mul_assign(&mut self, rhs: Scalar) {
+        impl std::ops::MulAssign<crate::Scalar> for $type {
+            fn mul_assign(&mut self, rhs: crate::Scalar) {
                 $(self.$field *= rhs;)+
             }
         }
 
-        impl Div<Scalar> for $type {
+        impl std::ops::Div<crate::Scalar> for $type {
             type Output = Self;
 
-            fn div(self, rhs: Scalar) -> Self::Output {
+            fn div(self, rhs: crate::Scalar) -> Self::Output {
                 let mut result = Self::default();
                 $(result.$field /= rhs;)+
                 result
             }
         }
 
-        impl DivAssign<Scalar> for $type {
-            fn div_assign(&mut self, rhs: Scalar) {
+        impl std::ops::DivAssign<crate::Scalar> for $type {
+            fn div_assign(&mut self, rhs: crate::Scalar) {
                 $(self.$field /= rhs;)+
             }
         }
@@ -69,23 +68,21 @@ macro_rules! impl_operators {
 
 macro_rules! impl_approx {
     ($type: ty, $($field:tt),+) => {
-        impl approx::AbsDiffEq for $type
-        {
+        impl approx::AbsDiffEq for $type {
             type Epsilon = crate::Scalar;
 
             fn default_epsilon() -> Self::Epsilon {
-                Scalar::default_epsilon()
+                Self::Epsilon::default_epsilon()
             }
 
             fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
                 let mut result = true;
-                $( result &= Scalar::abs_diff_eq(&self.$field, &other.$field, epsilon); )+
+                $( result &= Self::Epsilon::abs_diff_eq(&self.$field, &other.$field, epsilon); )+
                 result
             }
         }
 
-        impl approx::RelativeEq for $type
-        {
+        impl approx::RelativeEq for $type {
             fn default_max_relative() -> Self::Epsilon {
                 Self::Epsilon::default_max_relative()
             }
@@ -99,7 +96,7 @@ macro_rules! impl_approx {
 
         impl approx::UlpsEq for $type {
             fn default_max_ulps() -> u32 {
-                Scalar::default_max_ulps()
+                Self::Epsilon::default_max_ulps()
             }
 
             fn ulps_eq(&self, other: &Self, epsilon: Self::Epsilon, max_ulps: u32) -> bool {

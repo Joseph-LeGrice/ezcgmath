@@ -1,5 +1,4 @@
 use crate::Scalar;
-use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 /// A 2-dimensional vector
 #[repr(C)]
@@ -61,17 +60,29 @@ impl Vector3 {
 
     /// Returns a vector of (1.0, 0.0, 0.0).
     pub const fn unit_x() -> Self {
-        Vector3 { x: 1.0, y: 0.0, z: 0.0 }
+        Vector3 {
+            x: 1.0,
+            y: 0.0,
+            z: 0.0,
+        }
     }
 
     /// Returns a vector of (0.0, 1.0, 0.0).
     pub const fn unit_y() -> Self {
-        Vector3 { x: 0.0, y: 1.0, z: 0.0 }
+        Vector3 {
+            x: 0.0,
+            y: 1.0,
+            z: 0.0,
+        }
     }
 
     /// Returns a vector of (0.0, 0.0, 1.0).
     pub const fn unit_z() -> Self {
-        Vector3 { x: 0.0, y: 0.0, z: 1.0 }
+        Vector3 {
+            x: 0.0,
+            y: 0.0,
+            z: 1.0,
+        }
     }
 
     /// Returns the dot product of the vector with the vector 'rhs'.

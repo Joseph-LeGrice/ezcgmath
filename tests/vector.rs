@@ -3,7 +3,7 @@ extern crate approx;
 
 mod vector2 {
     use ezmath::vector::Vector2;
-    
+
     const A: Vector2 = Vector2::new(2.0, 4.0);
     const B: Vector2 = Vector2::new(5.0, 10.0);
 
@@ -61,9 +61,9 @@ mod vector2 {
     fn normalize() {
         let mut a = A.clone();
         a.normalize();
-        let a_result = Vector2::new(2.0/6.0, 4.0/ 6.0);
+        let a_result = Vector2::new(2.0 / 6.0, 4.0 / 6.0);
         ulps_eq!(a, a_result);
-        
+
         let mut b = B.clone();
         b.normalize();
         let b_result = Vector2::new(5.0 / 15.0, 10.0 / 15.0);
@@ -73,7 +73,7 @@ mod vector2 {
 
 mod vector3 {
     use ezmath::vector::Vector3;
-    
+
     const A: Vector3 = Vector3::new(2.0, 4.0, 6.0);
     const B: Vector3 = Vector3::new(5.0, 10.0, 15.0);
 
@@ -139,9 +139,9 @@ mod vector3 {
     fn normalize() {
         let mut a = A.clone();
         a.normalize();
-        let a_result = Vector3::new(2.0/12.0, 4.0/ 12.0, 6.0 / 12.0);
+        let a_result = Vector3::new(2.0 / 12.0, 4.0 / 12.0, 6.0 / 12.0);
         ulps_eq!(a, a_result);
-        
+
         let mut b = B.clone();
         b.normalize();
         let b_result = Vector3::new(5.0 / 30.0, 10.0 / 30.0, 15.0 / 30.0);
@@ -151,7 +151,7 @@ mod vector3 {
 
 mod vector4 {
     use ezmath::vector::Vector4;
-    
+
     const A: Vector4 = Vector4::new(2.0, 4.0, 6.0, 8.0);
     const B: Vector4 = Vector4::new(5.0, 10.0, 15.0, 20.0);
 
