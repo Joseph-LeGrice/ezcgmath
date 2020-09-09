@@ -17,6 +17,35 @@
 /// The primitive type used for all math in this crate.
 pub type Scalar = f32;
 
+pub struct Radians(Scalar);
+
+impl From<Scalar> for Radians {
+    fn from(radians: Scalar) -> Self {
+        Self(radians)
+    }
+}
+
+
+impl From<Degrees> for Radians {
+    fn from(degrees: Degrees) -> Self {
+        Self(degrees.0 * std::f32::consts::PI / 180.0)
+    }
+}
+
+pub struct Degrees(Scalar);
+
+impl From<Scalar> for Degrees {
+    fn from(degrees: Scalar) -> Self {
+        Self(degrees)
+    }
+}
+
+impl From<Radians> for Degrees {
+    fn from(radians: Radians) -> Self {
+        Self(radians.0 * 180.0 / std::f32::consts::PI)
+    }
+}
+
 #[macro_use]
 mod macros;
 
