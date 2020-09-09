@@ -1,11 +1,11 @@
-macro_rules! impl_operators {
+macro_rules! impl_add_self {
     ($type: ty, $($field:tt),+) => {
         impl std::ops::Add for $type {
             type Output = Self;
 
             fn add(self, rhs: Self) -> Self {
                 let mut result = Self::default();
-                $(result.$field += rhs.$field;)+
+                $(result.$field = self.$field + rhs.$field;)+
                 result
             }
         }
@@ -15,13 +15,17 @@ macro_rules! impl_operators {
                 $(self.$field += rhs.$field;)+
             }
         }
+    }
+}
 
+macro_rules! impl_sub_self {
+    ($type: ty, $($field:tt),+) => {
         impl std::ops::Sub for $type {
             type Output = Self;
 
             fn sub(self, rhs: $type) -> Self {
                 let mut result = Self::default();
-                $(result.$field -= rhs.$field;)+
+                $(result.$field = self.$field - rhs.$field;)+
                 result
             }
         }
@@ -31,13 +35,17 @@ macro_rules! impl_operators {
                 $(self.$field -= rhs.$field;)+
             }
         }
+    }
+}
 
+macro_rules! impl_mul_scalar {
+    ($type: ty, $($field:tt),+) => {
         impl std::ops::Mul<crate::Scalar> for $type {
             type Output = Self;
 
             fn mul(self, rhs: crate::Scalar) -> Self {
                 let mut result = Self::default();
-                $(result.$field *= rhs;)+
+                $(result.$field = self.$field * rhs;)+
                 result
             }
         }
@@ -47,13 +55,17 @@ macro_rules! impl_operators {
                 $(self.$field *= rhs;)+
             }
         }
+    }
+}
 
+macro_rules! impl_div_scalar {
+    ($type: ty, $($field:tt),+) => {
         impl std::ops::Div<crate::Scalar> for $type {
             type Output = Self;
 
             fn div(self, rhs: crate::Scalar) -> Self::Output {
                 let mut result = Self::default();
-                $(result.$field /= rhs;)+
+                $(result.$field = self.$field / rhs;)+
                 result
             }
         }

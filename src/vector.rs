@@ -31,16 +31,20 @@ impl Vector2 {
 
     /// The length of the vector.
     pub fn length(&mut self) -> Scalar {
-        self.x + self.y
+        (self.x + self.y).sqrt()
     }
 
     /// Normalizes the vector to a length of one.
     pub fn normalize(&mut self) {
-        self.x /= self.length();
-        self.y /= self.length();
+        let len = self.length();
+        self.x /= len;
+        self.y /= len;
     }
 }
-impl_operators!(Vector2, x, y);
+impl_add_self!(Vector2, x, y);
+impl_sub_self!(Vector2, x, y);
+impl_mul_scalar!(Vector2, x, y);
+impl_div_scalar!(Vector2, x, y);
 impl_approx!(Vector2, x, y);
 
 /// A 3-dimensional vector
@@ -101,17 +105,21 @@ impl Vector3 {
 
     /// The length of the vector.
     pub fn length(&mut self) -> Scalar {
-        self.x + self.y + self.z
+        (self.x + self.y + self.z).sqrt()
     }
 
     /// Normalizes the vector to a length of one.
     pub fn normalize(&mut self) {
-        self.x /= self.length();
-        self.y /= self.length();
-        self.z /= self.length();
+        let len = self.length();
+        self.x /= len;
+        self.y /= len;
+        self.z /= len;
     }
 }
-impl_operators!(Vector3, x, y, z);
+impl_add_self!(Vector3, x, y, z);
+impl_sub_self!(Vector3, x, y, z);
+impl_mul_scalar!(Vector3, x, y, z);
+impl_div_scalar!(Vector3, x, y, z);
 impl_approx!(Vector3, x, y, z);
 
 /// A 4-dimensional vector
@@ -135,5 +143,8 @@ impl Vector4 {
         self.x * rhs.x + self.y * rhs.y + self.z * rhs.z + self.w * rhs.w
     }
 }
-impl_operators!(Vector4, x, y, z, w);
+impl_add_self!(Vector4, x, y, z, w);
+impl_sub_self!(Vector4, x, y, z, w);
+impl_mul_scalar!(Vector4, x, y, z, w);
+impl_div_scalar!(Vector4, x, y, z, w);
 impl_approx!(Vector4, x, y, z, w);
