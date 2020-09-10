@@ -1,5 +1,7 @@
 # ezcgmath
 
+![build](https://github.com/Joseph-LeGrice/ezcgmath/workflows/build/badge.svg?branch=master)
+
 An extremely simplified linear algebra API, for use with computer graphics.
 
 Math should be fun, and easy. This crate aims to simplify the usage of math in 
