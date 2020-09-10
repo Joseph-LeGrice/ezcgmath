@@ -7,6 +7,8 @@ computer graphics applications for both the novice, and the expert. This is achi
 by providing a super-straightforward API with great documentation, and zero abstraction on the
 main types.
 
+## Implementation Details
+
 The `Scalar` type is fixed to f32. This was chosen due to its straightforward compatibility with graphics APIs.
 It is up to the user to create their own abstractions if any limits are hit due to this.
 
@@ -30,3 +32,8 @@ let translation_matrix = Matrix4::from_translation(&Vector3::new(0.0, 0.0, 10.0)
 let transformed_vector = position_vector * scale_matrix * rotation_matrix * translation_matrix;
 assert_eq!(transformed_vector, Vector3::new(0.0, 0.0, 0.0));
 ```
+
+## Disclaimer
+ezcgmath is still very much a work in progress. If there are holes you'd like filling, 
+please feel free to open an issue on GitHub so we can start a conversation on it. If you'd like to 
+contribute, that's great! Please read CONTRIBUTING.md for some guidelines on the process.
