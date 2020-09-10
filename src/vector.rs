@@ -1,4 +1,5 @@
 use crate::Scalar;
+use crate::matrix::{Matrix3, Matrix4};
 
 /// A 2-dimensional vector
 #[repr(C)]
@@ -122,6 +123,56 @@ impl_mul_scalar!(Vector3, x, y, z);
 impl_div_scalar!(Vector3, x, y, z);
 impl_approx!(Vector3, x, y, z);
 
+impl std::ops::Mul<Matrix3> for Vector3 {
+    type Output = Vector3;
+
+    fn mul(self, rhs: Matrix3) -> Vector3 {
+        Vector3 {
+            x: self.x * rhs.c00 + self.y * rhs.c01 + self.z * rhs.c02,
+            y: self.x * rhs.c10 + self.y * rhs.c11 + self.z * rhs.c12,
+            z: self.x * rhs.c20 + self.y * rhs.c21 + self.z * rhs.c22,
+        }
+    }
+}
+
+impl std::ops::MulAssign<Matrix3> for Vector3 {
+    fn mul_assign(&mut self, rhs: Matrix3) {
+        let x = self.x * rhs.c00 + self.y * rhs.c01 + self.z * rhs.c02;
+        let y = self.x * rhs.c10 + self.y * rhs.c11 + self.z * rhs.c12;
+        let z = self.x * rhs.c20 + self.y * rhs.c21 + self.z * rhs.c22;
+        self.x = x;
+        self.y = y;
+        self.z = z;
+    }
+}
+
+impl std::ops::Mul<Matrix4> for Vector3 {
+    type Output = Vector3;
+
+    fn mul(self, rhs: Matrix4) -> Vector3 {
+        (Vector4::from(self) * rhs).into()
+    }
+}
+
+impl std::ops::MulAssign<Matrix4> for Vector3 {
+    fn mul_assign(&mut self, rhs: Matrix4) {
+        let result: Vector3 = (Vector4::from(*self) * rhs).into();
+        self.x = result.x;
+        self.y = result.y;
+        self.z = result.z;
+    }
+}
+
+impl From<Vector4> for Vector3 {
+    fn from(vec4: Vector4) -> Self {
+        Vector3 {
+            x: vec4.x / vec4.w,
+            y: vec4.y / vec4.w,
+            z: vec4.z / vec4.w,
+        }
+    }
+}
+
 /// A 4-dimensional vector
 #[repr(C)]
 #[derive(Debug, Default, PartialEq, Copy, Clone)]
@@ -148,3 +199,40 @@ impl_sub_self!(Vector4, x, y, z, w);
 impl_mul_scalar!(Vector4, x, y, z, w);
 impl_div_scalar!(Vector4, x, y, z, w);
 impl_approx!(Vector4, x, y, z, w);
+
+impl std::ops::Mul<Matrix4> for Vector4 {
+    type Output = Vector4;
+
+    fn mul(self, rhs: Matrix4) -> Vector4 {
+        Vector4 {
+            x: self.x * rhs.c00 + self.y * rhs.c01 + self.z * rhs.c02 + self.w * rhs.c03,
+            y: self.x * rhs.c10 + self.y * rhs.c11 + self.z * rhs.c12 + self.w * rhs.c13,
+            z: self.x * rhs.c20 + self.y * rhs.c21 + self.z * rhs.c22 + self.w * rhs.c23,
+            w: self.x * rhs.c30 + self.y * rhs.c31 + self.z * rhs.c32 + self.w * rhs.c33,
+        }
+    }
+}
+
+impl std::ops::MulAssign<Matrix4> for Vector4 {
+    fn mul_assign(&mut self, rhs: Matrix4) {
+        let x = self.x * rhs.c00 + self.y * rhs.c01 + self.z * rhs.c02 + self.w * rhs.c03;
+        let y = self.x * rhs.c10 + self.y * rhs.c11 + self.z * rhs.c12 + self.w * rhs.c13;
+        let z = self.x * rhs.c20 + self.y * rhs.c21 + self.z * rhs.c22 + self.w * rhs.c23;
+        let w = self.x * rhs.c30 + self.y * rhs.c31 + self.z * rhs.c32 + self.w * rhs.c33;
+        self.x = x;
+        self.y = y;
+        self.z = z;
+        self.w = w;
+    }
+}
+
+impl From<Vector3> for Vector4 {
+    fn from(vec3: Vector3) -> Self {
+        Vector4 {
+            x: vec3.x,
+            y: vec3.y,
+            z: vec3.z,
+            w: 1.0,
+        }
+    }
+}

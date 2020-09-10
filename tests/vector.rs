@@ -75,6 +75,7 @@ mod vector2 {
 
 mod vector3 {
     use ezmath::vector::Vector3;
+    use ezmath::matrix::{Matrix3, Matrix4};
 
     const A: Vector3 = Vector3::new(2.0, 4.0, 6.0);
     const B: Vector3 = Vector3::new(5.0, 10.0, 15.0);
@@ -151,10 +152,44 @@ mod vector3 {
         let b_result = Vector3::new(5.0 / b_len, 10.0 / b_len, 15.0 / b_len);
         assert_ulps_eq!(b, b_result);
     }
+
+    #[test]
+    fn multiply_matrix3() {
+        let mut lhs = Vector3::new(2.0, 4.0, 6.0);
+        let rhs = Matrix3 {
+            c00: 1.0, c10: 2.0, c20: 3.0,
+            c01: 4.0, c11: 5.0, c21: 6.0,
+            c02: 7.0, c12: 8.0, c22: 9.0,
+        };
+        let result = Vector3 {
+            x: 60.0, y: 72.0, z: 84.0
+        };
+        assert_ulps_eq!(lhs * rhs, result);
+        lhs *= rhs;
+        assert_ulps_eq!(lhs, result);
+    }
+
+    #[test]
+    fn multiply_matrix4() {
+        let mut lhs = Vector3::new(2.0, 4.0, 6.0);
+        let rhs = Matrix4 {
+            c00: 1.0, c10: 2.0, c20: 3.0, c30: 4.0,
+            c01: 5.0, c11: 6.0, c21: 7.0, c31: 8.0,
+            c02: 9.0, c12: 10.0, c22: 11.0, c32: 12.0,
+            c03: 13.0, c13: 14.0, c23: 15.0, c33: 16.0,
+        };
+        let result = Vector3 {
+            x: 89.0 / 128.0, y: 102.0 / 128.0, z: 115.0 / 128.0
+        };
+        assert_ulps_eq!(lhs * rhs, result);
+        lhs *= rhs;
+        assert_ulps_eq!(lhs, result);
+    }
 }
 
 mod vector4 {
     use ezmath::vector::Vector4;
+    use ezmath::matrix::Matrix4;
 
     const A: Vector4 = Vector4::new(2.0, 4.0, 6.0, 8.0);
     const B: Vector4 = Vector4::new(5.0, 10.0, 15.0, 20.0);
@@ -201,5 +236,22 @@ mod vector4 {
     fn dot() {
         let result = 300.0;
         assert_ulps_eq!(A.dot(&B), result);
+    }
+
+    #[test]
+    fn multiply_matrix4() {
+        let mut lhs = Vector4::new(2.0, 4.0, 6.0, 1.0);
+        let rhs = Matrix4 {
+            c00: 1.0, c10: 2.0, c20: 3.0, c30: 4.0,
+            c01: 5.0, c11: 6.0, c21: 7.0, c31: 8.0,
+            c02: 9.0, c12: 10.0, c22: 11.0, c32: 12.0,
+            c03: 13.0, c13: 14.0, c23: 15.0, c33: 16.0,
+        };
+        let result = Vector4 {
+            x: 89.0, y: 102.0, z: 115.0, w: 128.0
+        };
+        assert_ulps_eq!(lhs * rhs, result);
+        lhs *= rhs;
+        assert_ulps_eq!(lhs, result);
     }
 }
