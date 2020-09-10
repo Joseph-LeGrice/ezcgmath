@@ -128,6 +128,7 @@ mod matrix3 {
 }
 
 mod matrix4 {
+    use ezmath::{Degrees, Radians};
     use ezmath::matrix::Matrix4;
 
     const A: Matrix4 = Matrix4 {
@@ -196,5 +197,111 @@ mod matrix4 {
             c03: 1354.0, c13: 1412.0, c23: 1470.0, c33: 1528.0,
         };
         assert_ulps_eq!(A * B, result);
+    }
+
+    fn verify_proj(matrix: Matrix4, fov: Degrees, aspect_ratio: f32, near: f32, far: f32) {
+        let x_scale = 2.0 / Radians::from(fov).0.tan();
+        let y_scale = x_scale / aspect_ratio;
+        let z_scale = far / (far-near);
+        let z_translation = -near * far / (far-near);
+        assert_ulps_eq!(matrix.c00, x_scale);
+        assert_ulps_eq!(matrix.c11, y_scale);
+        assert_ulps_eq!(matrix.c22, z_scale);
+        assert_ulps_eq!(matrix.c32, 1.0);
+        assert_ulps_eq!(matrix.c33, z_translation);
+    }
+
+    #[test]
+    fn projection_matrix_math_normal() {
+        let normal_matrix = Matrix4::new_perspective_projection(Degrees(90.0), 2560.0/1440.0, 0.1, 1000.0);
+        verify_proj(normal_matrix, Degrees(90.0), 2560.0/1440.0, 0.1, 1000.0);
+    }
+
+    #[test]
+    fn projection_matrix_math_zeroed_fov() {
+        let zeroed_fov = Matrix4::new_perspective_projection(Degrees(0.0), 0.1, 0.1, 1000.0);
+        verify_proj(zeroed_fov, Degrees(0.0), 2560.0/1440.0, 0.1, 1000.0);
+    }
+
+    #[test]
+    fn projection_matrix_math_negated_aspect() {
+        let negated_aspect = Matrix4::new_perspective_projection(Degrees(90.0), -2560.0/1440.0, 0.1, 1000.0);
+        verify_proj(negated_aspect, Degrees(90.0), -2560.0/1440.0, 0.1, 1000.0);
+    }
+
+    #[test]
+    fn projection_matrix_math_negated_far_plane() {
+        let negated_far_plane = Matrix4::new_perspective_projection(Degrees(90.0), 2560.0/1440.0, 0.1, -1000.0);
+        verify_proj(negated_far_plane, Degrees(90.0), 2560.0/1440.0, 0.1, -1000.0);
+    }
+
+    #[test]
+    fn projection_matrix_math_negated_near_plane() {
+        let negated_near_plane = Matrix4::new_perspective_projection(Degrees(90.0), 2560.0/1440.0, -0.1, 1000.0);
+        verify_proj(negated_near_plane, Degrees(90.0), 2560.0/1440.0, -0.1, 1000.0);
+    }
+
+    #[test]
+    fn projection_matrix_math_negated_fov() {
+        let negated_fov = Matrix4::new_perspective_projection(Degrees(-90.0), 2560.0/1440.0, 0.1, 1000.0);
+        verify_proj(negated_fov, Degrees(-90.0), 2560.0/1440.0, 0.1, 1000.0);
+    }
+    
+    #[test]
+    fn projection_matrix_panic_on_zereod() {
+        let zeroed_fov = std::panic::catch_unwind(|| Matrix4::new_perspective_projection(Degrees(90.0), 0.0, 0.1, 1000.0));
+        assert!(zeroed_fov.is_err());
+
+        let zeroed_planes = std::panic::catch_unwind(|| Matrix4::new_perspective_projection(Degrees(90.0), 0.1, 0.0, 0.0));
+        assert!(zeroed_planes.is_err());
+    }
+
+    fn verify_ortho(matrix: Matrix4, top: f32, bottom: f32, left: f32, right: f32, near: f32, far: f32) {
+        let c00 = 2.0 / (right - left);
+        let c11 = 2.0 / (top - bottom);
+        let c22 = 1.0 / (far - near);
+        let c23 = -near / (far - near);
+        let c33 = 1.0;
+        assert_ulps_eq!(matrix.c00, c00);
+        assert_ulps_eq!(matrix.c11, c11);
+        assert_ulps_eq!(matrix.c22, c22);
+        assert_ulps_eq!(matrix.c23, c23);
+        assert_ulps_eq!(matrix.c33, c33);
+    }
+
+    #[test]
+    fn orthographic_matrix_math() {
+        let normal_matrix = Matrix4::new_othographic_projection(-5.0, 5.0, -5.0, 5.0, 0.1, 1000.0);
+        verify_ortho(normal_matrix, -5.0, 5.0, -5.0, 5.0, 0.1, 1000.0);
+    }
+
+    #[test]
+    fn orthographic_matrix_math_negated_height() {
+        let negated_height = Matrix4::new_othographic_projection(5.0, -5.0, -5.0, 5.0, 0.1, 1000.0);
+        verify_ortho(negated_height, 5.0, -5.0, -5.0, 5.0, 0.1, 1000.0);
+    }
+
+    #[test]
+    fn orthographic_matrix_math_negated_width() {
+        let negated_width = Matrix4::new_othographic_projection(-5.0, 5.0, 5.0, -5.0, 0.1, 1000.0);
+        verify_ortho(negated_width, -5.0, 5.0, 5.0, -5.0, 0.1, 1000.0);
+    }
+
+    #[test]
+    fn orthographic_matrix_math_negated_planes() {
+        let negated_planes = Matrix4::new_othographic_projection(-5.0, 5.0, -5.0, 5.0, 0.1, -1000.0);
+        verify_ortho(negated_planes, -5.0, 5.0, -5.0, 5.0, 0.1, -1000.0);
+    }
+
+    #[test]
+    fn orthographic_matrix_panic_on_zereod() {
+        let zeroed_planes = std::panic::catch_unwind(|| Matrix4::new_othographic_projection(5.0, 5.0, 5.0, 5.0, 0.0, 0.0));
+        assert!(zeroed_planes.is_err());
+
+        let zeroed_width = std::panic::catch_unwind(|| Matrix4::new_othographic_projection(-5.0, 5.0, 0.0, 0.0, 0.1, 1000.0));
+        assert!(zeroed_width.is_err());
+
+        let zeroed_height = std::panic::catch_unwind(|| Matrix4::new_othographic_projection(0.0, 0.0, -5.0, 5.0, 0.1, 1000.0));
+        assert!(zeroed_height.is_err());
     }
 }

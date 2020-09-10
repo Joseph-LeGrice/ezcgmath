@@ -1,4 +1,4 @@
-use crate::Scalar;
+use crate::{Degrees, Radians, Scalar};
 use crate::vector::*;
 
 /// A 2 x 2 Matrix.
@@ -137,6 +137,64 @@ impl Matrix4 {
         }
     }
 
+    /// Constructs a new perspective projection. As a reminder, this will create a left-handed perspective matrix.
+    /// If you require a right-handed coordinate system, you'll have to convert to it with with a reflection matrix.
+    ///
+    /// The parameters follow convention as far as I am aware, but to clarify:
+    /// - `fovy` corresponds to the width of the field of view visible (or how far out you can hold your arms).
+    /// - `aspect ratio` is the ratio of width to height for the screen (so aspect_ratio = screen_width / screen_height).
+    /// - `near_plane` defines the start of the clipping volume for the camera along the z (the minimum distance at which objects can be rendered).
+    /// - `far_plane` defines the end of the clipping volume for the camera along the z (the maximum distance at which objects can be rendered).
+    pub fn new_perspective_projection(fov: Degrees, aspect_ratio: Scalar, near_plane: Scalar, far_plane: Scalar) -> Self {
+        assert!(aspect_ratio != 0.0);
+        assert!(near_plane - far_plane != 0.0);
+        let mut result = Self::default();
+        let x_scale = 2.0 / Radians::from(fov).0.tan();
+        result.c00 = x_scale;
+        result.c11 = x_scale / aspect_ratio;
+        result.c22 = far_plane / (far_plane - near_plane);
+        result.c32 = 1.0;
+        result.c33 = near_plane * far_plane / (near_plane - far_plane);
+        result
+    }
+
+    /// Constructs a new orthographic projection. As a reminder, this will create a left-handed orthographic matrix.
+    /// If you require a right-handed coordinate system, you'll have to convert to it with with a reflection matrix.
+    ///
+    /// I opted for simple parameters for this method, so you can create any size or shape orthographic bounding volume you desire.
+    /// However, my advice would be for your code to define an `orthographic_size` variable somehow. You can then convert to top/bottom/left/right as follows:
+    /// ```
+    /// struct OrthoBounds {
+    ///     top: f32,
+    ///     bottom: f32,
+    ///     left: f32,
+    ///     right: f32,
+    /// }
+    ///
+    /// fn get_ortho_bounds(orthographic_size: f32, aspect_ratio: f32) -> OrthoBounds {
+    ///     OrthoBounds {
+    ///         top: 0.5 * orthographic_size,
+    ///         bottom: -0.5 * orthographic_size,
+    ///         left: -0.5 * orthographic_size * aspect_ratio,
+    ///         right: 0.5 * orthographic_size * aspect_ratio,
+    ///     }
+    /// }
+    /// ```
+    /// If you choose not to use the above method, bear in mind that `top - bottom` and `right - left` should **never** equal 0. This will cause a panic.
+    pub fn new_othographic_projection(top: Scalar, bottom: Scalar, left: Scalar, right: Scalar, near_plane: Scalar, far_plane: Scalar) -> Self {
+        assert!(top - bottom != 0.0);
+        assert!(left - right != 0.0);
+        assert!(near_plane - far_plane != 0.0);
+        let mut result = Self::default();
+        result.c00 = 2.0 / (right - left);
+        result.c11 = 2.0 / (top - bottom);
+        result.c22 = 1.0 / (far_plane - near_plane);
+        result.c23 = -near_plane / (far_plane - near_plane);
+        result.c33 = 1.0;
+        result
+    }
+
+    /// Creates a translation matrix from a `Vector3`.
     pub const fn from_translation(translation: Vector3) -> Self {
         Self {
             c00: 1.0, c10: 0.0, c20: 0.0, c30: translation.x,
@@ -146,6 +204,7 @@ impl Matrix4 {
         }
     }
 
+    /// Creates a non-uniform scaling matrix from a `Vector3`.
     pub const fn from_nonuniform_scale(scale: Vector3) -> Self {
         Self {
             c00: scale.x, c10: 0.0,     c20: 0.0,     c30: 0.0,
@@ -155,6 +214,7 @@ impl Matrix4 {
         }
     }
     
+    /// Creates a uniform scaling matrix from a `Scalar`.
     pub const fn from_scale(scale: Scalar) -> Self {
         Self {
             c00: scale, c10: 0.0,   c20: 0.0,   c30: 0.0,
