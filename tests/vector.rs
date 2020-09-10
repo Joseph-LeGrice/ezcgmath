@@ -185,6 +185,20 @@ mod vector3 {
         lhs *= rhs;
         assert_ulps_eq!(lhs, result);
     }
+
+    #[test]
+    fn translation() {
+        let lhs = Vector3::new(0.0, 0.0, 0.0);
+        let rhs = Matrix4::from_translation(&Vector3::new(10.0, 0.0, 0.0));
+        assert_ulps_eq!(lhs * rhs, Vector3::new(10.0, 0.0, 0.0));
+    }
+
+    #[test]
+    fn scale() {
+        let lhs = Vector3::new(2.0, 5.0, 10.0);
+        let rhs = Matrix4::from_scale(2.0);
+        assert_ulps_eq!(lhs * rhs, Vector3::new(4.0, 10.0, 20.0));
+    }
 }
 
 mod vector4 {

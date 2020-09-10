@@ -195,17 +195,17 @@ impl Matrix4 {
     }
 
     /// Creates a translation matrix from a `Vector3`.
-    pub const fn from_translation(translation: Vector3) -> Self {
+    pub const fn from_translation(translation: &Vector3) -> Self {
         Self {
-            c00: 1.0, c10: 0.0, c20: 0.0, c30: translation.x,
-            c01: 0.0, c11: 1.0, c21: 0.0, c31: translation.y,
-            c02: 0.0, c12: 0.0, c22: 1.0, c32: translation.z,
-            c03: 0.0, c13: 0.0, c23: 0.0, c33: 1.0,
+            c00: 1.0, c10: 0.0, c20: 0.0, c30: 0.0,
+            c01: 0.0, c11: 1.0, c21: 0.0, c31: 0.0,
+            c02: 0.0, c12: 0.0, c22: 1.0, c32: 0.0,
+            c03: translation.x, c13: translation.y, c23: translation.z, c33: 1.0,
         }
     }
 
     /// Creates a non-uniform scaling matrix from a `Vector3`.
-    pub const fn from_nonuniform_scale(scale: Vector3) -> Self {
+    pub const fn from_nonuniform_scale(scale: &Vector3) -> Self {
         Self {
             c00: scale.x, c10: 0.0,     c20: 0.0,     c30: 0.0,
             c01: 0.0,     c11: scale.y, c21: 0.0,     c31: 0.0,
