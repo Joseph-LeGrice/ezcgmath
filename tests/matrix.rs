@@ -2,7 +2,7 @@
 extern crate approx;
 
 mod matrix2 {
-    use ezmath::matrix::Matrix2;
+    use ezcgmath::matrix::Matrix2;
 
     const A: Matrix2 = Matrix2 {
         c00: 1.0, c10: 2.0,
@@ -62,7 +62,7 @@ mod matrix2 {
 }
 
 mod matrix3 {
-    use ezmath::matrix::Matrix3;
+    use ezcgmath::matrix::Matrix3;
 
     const A: Matrix3 = Matrix3 {
         c00: 1.0, c10: 2.0, c20: 3.0,
@@ -128,8 +128,8 @@ mod matrix3 {
 }
 
 mod matrix4 {
-    use ezmath::{Degrees, Radians};
-    use ezmath::matrix::Matrix4;
+    use ezcgmath::{Degrees, Radians};
+    use ezcgmath::matrix::Matrix4;
 
     const A: Matrix4 = Matrix4 {
         c00: 1.0, c10: 2.0, c20: 3.0, c30: 4.0,

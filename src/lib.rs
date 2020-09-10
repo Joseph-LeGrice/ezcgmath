@@ -1,4 +1,4 @@
-//! # ezmath
+//! # ezcgmath
 //! 
 //! An extremely simplified linear algebra API, for use with computer graphics.
 //! 
@@ -19,9 +19,9 @@
 //! you would write these transformations in "reading order":
 //! 
 //! ```
-//! use ezmath::Degrees;
-//! use ezmath::matrix::Matrix4;
-//! use ezmath::vector::Vector3;
+//! use ezcgmath::Degrees;
+//! use ezcgmath::matrix::Matrix4;
+//! use ezcgmath::vector::Vector3;
 //!
 //! let position_vector = Vector3::new(5.0, 0.0, 0.0);
 //! let scale_matrix = Matrix4::from_nonuniform_scale(&Vector3::new(2.0, 1.0, 1.0));

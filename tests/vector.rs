@@ -2,7 +2,7 @@
 extern crate approx;
 
 mod vector2 {
-    use ezmath::vector::Vector2;
+    use ezcgmath::vector::Vector2;
 
     const A: Vector2 = Vector2::new(2.0, 4.0);
     const B: Vector2 = Vector2::new(5.0, 10.0);
@@ -74,8 +74,8 @@ mod vector2 {
 }
 
 mod vector3 {
-    use ezmath::vector::Vector3;
-    use ezmath::matrix::{Matrix3, Matrix4};
+    use ezcgmath::vector::Vector3;
+    use ezcgmath::matrix::{Matrix3, Matrix4};
 
     const A: Vector3 = Vector3::new(2.0, 4.0, 6.0);
     const B: Vector3 = Vector3::new(5.0, 10.0, 15.0);
@@ -202,8 +202,8 @@ mod vector3 {
 }
 
 mod vector4 {
-    use ezmath::vector::Vector4;
-    use ezmath::matrix::Matrix4;
+    use ezcgmath::vector::Vector4;
+    use ezcgmath::matrix::Matrix4;
 
     const A: Vector4 = Vector4::new(2.0, 4.0, 6.0, 8.0);
     const B: Vector4 = Vector4::new(5.0, 10.0, 15.0, 20.0);
