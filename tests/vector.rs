@@ -71,6 +71,11 @@ mod vector2 {
         let b_result = Vector2::new(5.0 / b_len, 10.0 / b_len);
         assert_ulps_eq!(b, b_result);
     }
+
+    #[test]
+    fn look_rotation() {
+        assert!(false);
+    }
 }
 
 mod vector3 {
@@ -198,6 +203,11 @@ mod vector3 {
         let lhs = Vector3::new(2.0, 5.0, 10.0);
         let rhs = Matrix4::from_scale(2.0);
         assert_ulps_eq!(lhs * rhs, Vector3::new(4.0, 10.0, 20.0));
+    }
+
+    #[test]
+    fn multiply_quaternion() {
+        assert!(false);
     }
 }
 

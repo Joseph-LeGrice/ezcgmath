@@ -1,5 +1,6 @@
 use crate::{Degrees, Radians, Scalar};
 use crate::vector::*;
+use crate::quaternion::Quaternion;
 
 /// A 2 x 2 Matrix.
 #[repr(C)]
@@ -68,6 +69,23 @@ impl Matrix3 {
             c00: 1.0, c10: 0.0, c20: 0.0,
             c01: 0.0, c11: 1.0, c21: 0.0,
             c02: 0.0, c12: 0.0, c22: 1.0,
+        }
+    }
+
+    /// Creates a new so called "look at" rotation. This rotation will point in the forward direction
+    /// with the given up direction.
+    ///
+    /// As a reminder, this will create a left-handed rotation matrix.
+    /// If you require a right-handed coordinate system, you'll have to convert to it with with a reflection matrix.
+    pub fn from_look_at(mut forward: Vector3, mut up: Vector3) -> Self {
+        forward.normalize();
+        up.normalize();
+        let right = up.cross(&forward);
+
+        Matrix3 {
+            c00: right.x,   c10: right.y,   c20: right.z,
+            c01: up.x,      c11: up.y,      c21: up.z,
+            c02: forward.x, c12: forward.y, c22: forward.z,
         }
     }
 }
@@ -279,5 +297,29 @@ impl std::ops::MulAssign for Matrix4 {
         self.c01 = c01; self.c11 = c11; self.c21 = c21; self.c31 = c31;
         self.c02 = c02; self.c12 = c12; self.c22 = c22; self.c32 = c32;
         self.c03 = c03; self.c13 = c13; self.c23 = c23; self.c33 = c33;
+    }
+}
+
+impl From<Quaternion> for Matrix4 {
+    fn from(rotation: Quaternion) -> Self {
+        let x = rotation.x * 2.0;
+        let y = rotation.y * 2.0;
+        let z = rotation.z * 2.0;
+        let xx = rotation.x * x;
+        let yy = rotation.y * y;
+        let zz = rotation.z * z;
+        let xy = rotation.x * y;
+        let xz = rotation.x * z;
+        let yz = rotation.y * z;
+        let wx = rotation.w * x;
+        let wy = rotation.w * y;
+        let wz = rotation.w * z;
+
+        Self {
+            c00: 1.0 - (yy + zz), c10: xy - wz,         c20: xz + wy,         c30: 0.0,
+            c01: xy + wz,         c11: 1.0 - (xx + zz), c21: yz - wx,         c31: 0.0,
+            c02: xz - wy,         c12: yz + wx,         c22: 1.0 - (xx + yy), c32: 0.0,
+            c03: 0.0,             c13: 0.0,             c23: 0.0,             c33: 1.0,
+        }
     }
 }

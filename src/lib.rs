@@ -20,9 +20,7 @@
 //! you would write these transformations in "reading order":
 //! 
 //! ```
-//! use ezcgmath::Degrees;
-//! use ezcgmath::matrix::Matrix4;
-//! use ezcgmath::vector::Vector3;
+//! use ezcgmath::prelude::*;
 //!
 //! let position_vector = Vector3::new(5.0, 0.0, 0.0);
 //! let scale_matrix = Matrix4::from_nonuniform_scale(&Vector3::new(2.0, 1.0, 1.0));
@@ -37,11 +35,16 @@
 //! please feel free to open an issue on GitHub so we can start a conversation on it. If you'd like to 
 //! contribute, that's great! Please read CONTRIBUTING.md for some guidelines on the process.
 
+#[macro_use]
+mod macros;
+
 /// The primitive type used for all math in this crate.
 pub type Scalar = f32;
 
+/// An angle in Radians. Can be converted from Degrees easily with `Radians::from(degrees)`
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Radians(pub Scalar);
+impl_approx!(Radians, 0);
 
 impl From<Scalar> for Radians {
     fn from(radians: Scalar) -> Self {
@@ -55,8 +58,10 @@ impl From<Degrees> for Radians {
     }
 }
 
+/// An angle in Degrees. Can be converted from Radians easily with `Degrees::from(radians)`
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Degrees(pub Scalar);
+impl_approx!(Degrees, 0);
 
 impl From<Scalar> for Degrees {
     fn from(degrees: Scalar) -> Self {
@@ -70,11 +75,19 @@ impl From<Radians> for Degrees {
     }
 }
 
-#[macro_use]
-mod macros;
-
 /// Contains Matrix types and operations
 pub mod matrix;
 
+/// Contains the Quaternion type
+pub mod quaternion;
+
 /// Contains Vector types and operations
 pub mod vector;
+
+/// The most common types you will use in this library, re-exported under a single module.
+pub mod prelude {
+    pub use crate::{Degrees, Radians};
+    pub use crate::matrix::Matrix4;
+    pub use crate::quaternion::Quaternion;
+    pub use crate::vector::Vector3;
+}
