@@ -1,0 +1,84 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'ezcgmath'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=ezcgmath"
+                ],
+                "filter": {
+                    "name": "ezcgmath",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug integration test 'matrix'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--test=matrix",
+                    "--package=ezcgmath"
+                ],
+                "filter": {
+                    "name": "matrix",
+                    "kind": "test"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug integration test 'quaternion'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--test=quaternion",
+                    "--package=ezcgmath"
+                ],
+                "filter": {
+                    "name": "quaternion",
+                    "kind": "test"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug integration test 'vector'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--test=vector",
+                    "--package=ezcgmath"
+                ],
+                "filter": {
+                    "name": "vector",
+                    "kind": "test"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

@@ -2,6 +2,8 @@ use crate::{Scalar, Degrees, Radians};
 use crate::vector::Vector3;
 use crate::matrix::{Matrix3, Matrix4};
 
+/// A Quaternion is used to represent a rotation. By representing a rotation this way,
+/// we can prevent gimbal locking and have better interpolation between different orientations
 #[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Quaternion {
     pub x: Scalar,
@@ -12,6 +14,7 @@ pub struct Quaternion {
 impl_approx!(Quaternion, x, y, z, w);
 
 impl Quaternion {
+    /// Create an instance of the 'default' rotation
     pub fn identity() -> Self {
         Self {
             x: 0.0,
@@ -21,6 +24,7 @@ impl Quaternion {
         }
     }
 
+    /// Create a rotation of a given angle around a given axis
     pub fn from_axis_angle(axis: &Vector3, angle: Degrees) -> Self {
         let mut result = Quaternion {
             x: axis.x * (Radians::from(angle).0 / 2.0).sin(),
@@ -32,11 +36,12 @@ impl Quaternion {
         result
     }
 
+    /// Create a rotation that points in a given forward and direction, with a defined upwards direction
     pub fn from_look_at(forward: &Vector3, up: &Vector3) -> Self {
         let mat = Matrix3::from_look_at(*forward, *up);
         let tr = mat.c00 + mat.c11 + mat.c22;
         let mut result = {
-            if tr > 0.0 {
+            if tr >= 0.0 {
                 let s = (tr + 1.0).sqrt() * 2.0;
                 Self {
                     x: (mat.c21 - mat.c12) / s,
@@ -45,6 +50,7 @@ impl Quaternion {
                     w: 0.25 * s
                 }
             } else if (mat.c00 > mat.c11) && (mat.c00 > mat.c22) {
+                // TODO: Test Code Coverage missing for this
                 let s = (1.0 + mat.c00 - mat.c11 - mat.c22).sqrt() * 2.0;
                 Self {
                     x: 0.25 * s,
@@ -53,6 +59,7 @@ impl Quaternion {
                     w: (mat.c21 - mat.c12) / s,
                 }
             } else if mat.c11 > mat.c22 {
+                // TODO: Test Code Coverage missing for this
                 let s = (1.0 + mat.c11 - mat.c00 - mat.c22).sqrt() * 2.0;
                 Self {
                     x: (mat.c01 + mat.c10) / s,
@@ -61,6 +68,7 @@ impl Quaternion {
                     w: (mat.c02 - mat.c20) / s,
                 }
             } else {
+                // TODO: Test Code Coverage missing for this
                 let s = (1.0 + mat.c22 - mat.c00 - mat.c11).sqrt() * 2.0;
                 Self {
                     x: (mat.c02 + mat.c20) / s,
@@ -74,6 +82,7 @@ impl Quaternion {
         result
     }
 
+    /// Create a rotation that rotates x, y, and z degrees around each axis.
     pub fn from_euler(angle_x: Degrees, angle_y: Degrees, angle_z: Degrees) -> Self {
         let angle_x = Radians::from(angle_x).0 * 0.5;
         let angle_y = Radians::from(angle_y).0 * 0.5;
@@ -96,28 +105,29 @@ impl Quaternion {
         result
     }
 
-    pub fn as_euler(self) -> (Degrees, Degrees, Degrees) {
-        let sinr = 2.0 * (self.w * self.x + self.y * self.z);
-        let cosr = 1.0 - 2.0 * (self.x * self.x + self.y * self.y);
-        let x = sinr.atan2(cosr);
+    // TODO: as_euler
+    // /// Convert this quaternion into a euler representation
+    // pub fn as_euler(self) -> (Degrees, Degrees, Degrees) {
+    //     let sinr = 2.0 * (self.w * self.x + self.y * self.z);
+    //     let cosr = 1.0 - 2.0 * (self.x * self.x + self.y * self.y);
+    //     let x = sinr.atan2(cosr);
     
-        let y = {
-            let sinp = 2.0 * (self.w * self.y - self.z * self.x);
-            if sinp.abs() >= 1.0 {
-                (std::f32::consts::PI / 2.0).copysign(sinp/sinp)
-            } else {
-                sinp.asin()
-            }
-        };
+    //     let y = {
+    //         let sinp = 2.0 * (self.w * self.y - self.z * self.x);
+    //         if sinp.abs() >= 1.0 {
+    //             (std::f32::consts::PI / 2.0).copysign(sinp/sinp)
+    //         } else {
+    //             sinp.asin()
+    //         }
+    //     };
     
-        let siny = 2.0 * (self.w * self.z + self.x * self.y);
-        let cosy = 1.0 - 2.0 * (self.y * self.y + self.z * self.z);
-        let z = siny.atan2(cosy);
+    //     let siny = 2.0 * (self.w * self.z + self.x * self.y);
+    //     let cosy = 1.0 - 2.0 * (self.y * self.y + self.z * self.z);
+    //     let z = siny.atan2(cosy);
         
-        (Degrees::from(Radians(x)), Degrees::from(Radians(y)), Degrees::from(Radians(z)))
-    }
+    //     (Degrees::from(Radians(x)), Degrees::from(Radians(y)), Degrees::from(Radians(z)))
+    // }
 
-    
     fn normalize(&mut self) {
         let mag = self.magnitude();
         self.x /= mag;
@@ -165,3 +175,6 @@ impl std::ops::Mul<Matrix4> for Quaternion {
         Matrix4::from(self) * rhs
     }
 }
+
+// TODO: Add Matrix4 -> Quaternion Conversion?
+// Then We could implement std::ops::MulAssign<Matrix4> for Quaternion

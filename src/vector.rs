@@ -108,7 +108,7 @@ impl Vector3 {
 
     /// The length of the vector.
     pub fn length(&mut self) -> Scalar {
-        (self.x + self.y + self.z).sqrt()
+        (self.x.powf(2.0) + self.y.powf(2.0) + self.z.powf(2.0)).sqrt()
     }
 
     /// Normalizes the vector to a length of one.

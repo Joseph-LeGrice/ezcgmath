@@ -74,10 +74,8 @@ mod vector2 {
 }
 
 mod vector3 {
-    use ezcgmath::Degrees;
     use ezcgmath::matrix::{Matrix3, Matrix4};
-    use ezcgmath::quaternion::Quaternion;
-    use ezcgmath::vector::Vector3;
+    use ezcgmath::vector::{Vector3, Vector4};
 
     const A: Vector3 = Vector3::new(2.0, 4.0, 6.0);
     const B: Vector3 = Vector3::new(5.0, 10.0, 15.0);
@@ -144,23 +142,21 @@ mod vector3 {
 
     #[test]
     fn length() {
-        assert_ulps_eq!(A.length(), (12.0 as f32).sqrt());
-        assert_ulps_eq!(B.length(), (30.0 as f32).sqrt());
+        let a_len = ((A.x.powf(2.0) + A.y.powf(2.0) + A.z.powf(2.0)) as f32).sqrt();
+        let b_len = ((B.x.powf(2.0) + B.y.powf(2.0) + B.z.powf(2.0)) as f32).sqrt();
+        assert_ulps_eq!(A.length(), a_len);
+        assert_ulps_eq!(B.length(), b_len);
     }
 
     #[test]
     fn normalize() {
         let mut a = A.clone();
         a.normalize();
-        let a_len = (12.0 as f32).sqrt();
-        let a_result = Vector3::new(2.0 / a_len, 4.0 / a_len, 6.0 / a_len);
-        assert_ulps_eq!(a, a_result);
+        assert_ulps_eq!(a.length(), 1.0);
 
         let mut b = B.clone();
         b.normalize();
-        let b_len = (30.0 as f32).sqrt();
-        let b_result = Vector3::new(5.0 / b_len, 10.0 / b_len, 15.0 / b_len);
-        assert_ulps_eq!(b, b_result);
+        assert_ulps_eq!(b.length(), 1.0);
     }
 
     #[test]
@@ -211,15 +207,14 @@ mod vector3 {
     }
 
     #[test]
-    fn multiply_quaternion() {
-        let rhs = Vector3::unit_z();
-        let lhs = Quaternion::from_axis_angle(&Vector3::unit_y(), Degrees(90.0));
-        assert_ulps_eq!(rhs * lhs, Vector3::unit_x())
+    fn from_vector4() {
+        let vec4 = Vector4::new(2.0, 4.0, 6.0, 2.0);
+        assert_ulps_eq!(Vector3::from(vec4), Vector3::new(1.0, 2.0, 3.0));
     }
 }
 
 mod vector4 {
-    use ezcgmath::vector::Vector4;
+    use ezcgmath::vector::{Vector3, Vector4};
     use ezcgmath::matrix::Matrix4;
 
     const A: Vector4 = Vector4::new(2.0, 4.0, 6.0, 8.0);
@@ -270,7 +265,16 @@ mod vector4 {
     }
 
     #[test]
+    fn from_vector3() {
+        let vec3 = Vector3::new(2.0, 4.0, 6.0);
+        assert_ulps_eq!(Vector4::from(vec3), Vector4::new(2.0, 4.0, 6.0, 1.0));
+    }
+
+    #[test]
     fn multiply_matrix4() {
+        // This single test verifies a swath of things. Because Vector3s and Quaternions are ultimately
+        // turned into Vector4s and Matrix4s (respectfully), a lot of multiplication involving them boils
+        // down to this. There are seperate tests that check the conversions are working properly.
         let mut lhs = Vector4::new(2.0, 4.0, 6.0, 1.0);
         let rhs = Matrix4 {
             c00: 1.0, c10: 2.0, c20: 3.0, c30: 4.0,

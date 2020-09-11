@@ -130,7 +130,6 @@ impl std::ops::MulAssign for Matrix3 {
     }
 }
 
-
 /// A 4 x 4 Matrix.
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, PartialEq)]
@@ -297,6 +296,20 @@ impl std::ops::MulAssign for Matrix4 {
         self.c01 = c01; self.c11 = c11; self.c21 = c21; self.c31 = c31;
         self.c02 = c02; self.c12 = c12; self.c22 = c22; self.c32 = c32;
         self.c03 = c03; self.c13 = c13; self.c23 = c23; self.c33 = c33;
+    }
+}
+
+impl std::ops::Mul<Quaternion> for Matrix4 {
+    type Output = Matrix4;
+
+    fn mul(self, rhs: Quaternion) -> Self::Output {
+        self * Matrix4::from(rhs)
+    }
+}
+
+impl std::ops::MulAssign<Quaternion> for Matrix4 {
+    fn mul_assign(&mut self, rhs: Quaternion) {
+        *self *= Matrix4::from(rhs);
     }
 }
 

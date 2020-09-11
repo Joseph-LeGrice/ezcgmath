@@ -130,6 +130,7 @@ mod matrix3 {
 mod matrix4 {
     use ezcgmath::{Degrees, Radians};
     use ezcgmath::matrix::Matrix4;
+    use ezcgmath::quaternion::Quaternion;
 
     const A: Matrix4 = Matrix4 {
         c00: 1.0, c10: 2.0, c20: 3.0, c30: 4.0,
@@ -303,5 +304,20 @@ mod matrix4 {
 
         let zeroed_height = std::panic::catch_unwind(|| Matrix4::new_othographic_projection(0.0, 0.0, -5.0, 5.0, 0.1, 1000.0));
         assert!(zeroed_height.is_err());
+    }
+
+    #[test]
+    fn from_quaternion() {
+        // Running this test ensures nothing is "wrong" when you do quaternion * matrix4.
+        // That's because quaternion * matrix4 is actually Matrix4::from(quaternion) * matrix4.
+        // So it's really just matrix4 * matrix4. Any issues with that will get caught by a different test.
+        let matrix_from_quaternion = Matrix4::from(Quaternion { x: 0.18257418583505536, y: 0.3651483716701107, z: 0.5477225575051661, w: 0.7302967433402214 });
+        let result = Matrix4 {
+            c00: 0.13333333333333353, c10: -0.6666666666666666, c20: 0.7333333333333332, c30: 0.0,
+            c01: 0.9333333333333332, c11: 0.3333333333333335, c21: 0.13333333333333336, c31: 0.0,
+            c02: -0.33333333333333326, c12: 0.6666666666666665, c22: 0.6666666666666667, c32: 0.0,
+            c03: 0.0, c13: 0.0, c23: 0.0, c33: 1.0,
+        };
+        assert_ulps_eq!(matrix_from_quaternion, result);
     }
 }

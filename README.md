@@ -6,7 +6,7 @@ An extremely simplified linear algebra API, for use with computer graphics.
 
 Math should be fun, and easy. This crate aims to simplify the usage of math in 
 computer graphics applications for both the novice, and the expert. This is achieved
-by providing a super-straightforward API with great documentation, and zero abstraction on the
+by providing a super-straightforward API with good documentation, and zero abstraction on the
 main types.
 
 ## Implementation Details
