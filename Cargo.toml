@@ -1,5 +1,6 @@
 [package]
 name = "ezcgmath"
+description = "Easy linear algebra Math library for use with computer graphics."
 version = "0.0.1"
 authors = ["Joseph Le Grice <joe.legrice@gmail.com>"]
 edition = "2018"
