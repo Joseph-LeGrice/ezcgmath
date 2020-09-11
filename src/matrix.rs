@@ -198,7 +198,7 @@ impl Matrix4 {
     /// }
     /// ```
     /// If you choose not to use the above method, bear in mind that `top - bottom` and `right - left` should **never** equal 0. This will cause a panic.
-    pub fn new_othographic_projection(top: Scalar, bottom: Scalar, left: Scalar, right: Scalar, near_plane: Scalar, far_plane: Scalar) -> Self {
+    pub fn new_orthographic_projection(top: Scalar, bottom: Scalar, left: Scalar, right: Scalar, near_plane: Scalar, far_plane: Scalar) -> Self {
         assert!(top - bottom != 0.0);
         assert!(left - right != 0.0);
         assert!(near_plane - far_plane != 0.0);
