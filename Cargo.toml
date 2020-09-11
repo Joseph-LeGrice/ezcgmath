@@ -1,9 +1,16 @@
 [package]
 name = "ezcgmath"
-description = "Easy linear algebra Math library for use with computer graphics."
 version = "0.0.1"
 authors = ["Joseph Le Grice <joe.legrice@gmail.com>"]
+description = "Easy linear algebra Math library for use with computer graphics."
+license = "MIT"
+repository = "https://github.com/Joseph-LeGrice/ezcgmath"
+documentation = "https://docs.rs/ezcgmath"
 edition = "2018"
+readme = "README.md"
+
+keywords = ["math", "matrix", "vector", "gamedev", "graphics"]
+categories = ["mathematics", "game-development", "graphics"]
 
 [dependencies]
 approx = "0.3.2"
