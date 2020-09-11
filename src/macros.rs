@@ -1,3 +1,19 @@
+macro_rules! impl_negate_self {
+    ($type: ty, $($field:tt),+) => {
+        impl std::ops::Neg for $type {
+            type Output = Self;
+
+            fn neg(self) -> Self {
+                let mut result = Self::default();
+                $(result.$field = -self.$field;)+
+                result
+            }
+        }
+    }
+}
+
+
+
 macro_rules! impl_add_self {
     ($type: ty, $($field:tt),+) => {
         impl std::ops::Add for $type {

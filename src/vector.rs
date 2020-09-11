@@ -1,5 +1,6 @@
 use crate::Scalar;
 use crate::matrix::{Matrix3, Matrix4};
+use crate::quaternion::Quaternion;
 
 /// A 2-dimensional vector
 #[repr(C)]
@@ -46,6 +47,7 @@ impl_add_self!(Vector2, x, y);
 impl_sub_self!(Vector2, x, y);
 impl_mul_scalar!(Vector2, x, y);
 impl_div_scalar!(Vector2, x, y);
+impl_negate_self!(Vector2, x, y);
 impl_approx!(Vector2, x, y);
 
 /// A 3-dimensional vector
@@ -121,6 +123,7 @@ impl_add_self!(Vector3, x, y, z);
 impl_sub_self!(Vector3, x, y, z);
 impl_mul_scalar!(Vector3, x, y, z);
 impl_div_scalar!(Vector3, x, y, z);
+impl_negate_self!(Vector3, x, y, z);
 impl_approx!(Vector3, x, y, z);
 
 impl std::ops::Mul<Matrix3> for Vector3 {
@@ -163,6 +166,23 @@ impl std::ops::MulAssign<Matrix4> for Vector3 {
     }
 }
 
+impl std::ops::Mul<Quaternion> for Vector3 {
+    type Output = Vector3;
+
+    fn mul(self, rhs: Quaternion) -> Vector3 {
+        (Vector4::from(self) * Matrix4::from(rhs)).into()
+    }
+}
+
+impl std::ops::MulAssign<Quaternion> for Vector3 {
+    fn mul_assign(&mut self, rhs: Quaternion) {
+        let result: Vector3 = (Vector4::from(*self) * Matrix4::from(rhs)).into();
+        self.x = result.x;
+        self.y = result.y;
+        self.z = result.z;
+    }
+}
+
 impl From<Vector4> for Vector3 {
     fn from(vec4: Vector4) -> Self {
         Vector3 {
@@ -198,6 +218,7 @@ impl_add_self!(Vector4, x, y, z, w);
 impl_sub_self!(Vector4, x, y, z, w);
 impl_mul_scalar!(Vector4, x, y, z, w);
 impl_div_scalar!(Vector4, x, y, z, w);
+impl_negate_self!(Vector4, x, y, z, w);
 impl_approx!(Vector4, x, y, z, w);
 
 impl std::ops::Mul<Matrix4> for Vector4 {

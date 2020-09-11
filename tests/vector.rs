@@ -71,16 +71,13 @@ mod vector2 {
         let b_result = Vector2::new(5.0 / b_len, 10.0 / b_len);
         assert_ulps_eq!(b, b_result);
     }
-
-    #[test]
-    fn look_rotation() {
-        assert!(false);
-    }
 }
 
 mod vector3 {
-    use ezcgmath::vector::Vector3;
+    use ezcgmath::Degrees;
     use ezcgmath::matrix::{Matrix3, Matrix4};
+    use ezcgmath::quaternion::Quaternion;
+    use ezcgmath::vector::Vector3;
 
     const A: Vector3 = Vector3::new(2.0, 4.0, 6.0);
     const B: Vector3 = Vector3::new(5.0, 10.0, 15.0);
@@ -124,6 +121,14 @@ mod vector3 {
     }
 
     #[test]
+    fn negate() {
+        let v1 = Vector3::new(1.0, -1.0, 1.0);
+        let v2 = Vector3::new(-1.0, 1.0, -1.0);
+        assert_ulps_eq!(-v1, v2);
+        assert_ulps_eq!(v1, -v2);
+    }
+
+    #[test]
     fn dot() {
         let result = 140.0;
         assert_ulps_eq!(A.dot(&B), result);
@@ -131,9 +136,9 @@ mod vector3 {
 
     #[test]
     fn cross() {
-        let v1 = Vector3::new(1.0, 0.0, 0.0);
+        let v1 = Vector3::new(0.0, 1.0, 0.0);
         let v2 = Vector3::new(0.0, 0.0, 1.0);
-        let result = Vector3::new(0.0, -1.0, 0.0);
+        let result = Vector3::new(1.0, 0.0, 0.0);
         assert_ulps_eq!(v1.cross(&v2), result);
     }
 
@@ -207,7 +212,9 @@ mod vector3 {
 
     #[test]
     fn multiply_quaternion() {
-        assert!(false);
+        let rhs = Vector3::unit_z();
+        let lhs = Quaternion::from_axis_angle(&Vector3::unit_y(), Degrees(90.0));
+        assert_ulps_eq!(rhs * lhs, Vector3::unit_x())
     }
 }
 
