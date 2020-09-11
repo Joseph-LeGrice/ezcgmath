@@ -272,37 +272,37 @@ mod matrix4 {
 
     #[test]
     fn orthographic_matrix_math() {
-        let normal_matrix = Matrix4::new_othographic_projection(-5.0, 5.0, -5.0, 5.0, 0.1, 1000.0);
+        let normal_matrix = Matrix4::new_orthographic_projection(-5.0, 5.0, -5.0, 5.0, 0.1, 1000.0);
         verify_ortho(normal_matrix, -5.0, 5.0, -5.0, 5.0, 0.1, 1000.0);
     }
 
     #[test]
     fn orthographic_matrix_math_negated_height() {
-        let negated_height = Matrix4::new_othographic_projection(5.0, -5.0, -5.0, 5.0, 0.1, 1000.0);
+        let negated_height = Matrix4::new_orthographic_projection(5.0, -5.0, -5.0, 5.0, 0.1, 1000.0);
         verify_ortho(negated_height, 5.0, -5.0, -5.0, 5.0, 0.1, 1000.0);
     }
 
     #[test]
     fn orthographic_matrix_math_negated_width() {
-        let negated_width = Matrix4::new_othographic_projection(-5.0, 5.0, 5.0, -5.0, 0.1, 1000.0);
+        let negated_width = Matrix4::new_orthographic_projection(-5.0, 5.0, 5.0, -5.0, 0.1, 1000.0);
         verify_ortho(negated_width, -5.0, 5.0, 5.0, -5.0, 0.1, 1000.0);
     }
 
     #[test]
     fn orthographic_matrix_math_negated_planes() {
-        let negated_planes = Matrix4::new_othographic_projection(-5.0, 5.0, -5.0, 5.0, 0.1, -1000.0);
+        let negated_planes = Matrix4::new_orthographic_projection(-5.0, 5.0, -5.0, 5.0, 0.1, -1000.0);
         verify_ortho(negated_planes, -5.0, 5.0, -5.0, 5.0, 0.1, -1000.0);
     }
 
     #[test]
     fn orthographic_matrix_panic_on_zereod() {
-        let zeroed_planes = std::panic::catch_unwind(|| Matrix4::new_othographic_projection(5.0, 5.0, 5.0, 5.0, 0.0, 0.0));
+        let zeroed_planes = std::panic::catch_unwind(|| Matrix4::new_orthographic_projection(5.0, 5.0, 5.0, 5.0, 0.0, 0.0));
         assert!(zeroed_planes.is_err());
 
-        let zeroed_width = std::panic::catch_unwind(|| Matrix4::new_othographic_projection(-5.0, 5.0, 0.0, 0.0, 0.1, 1000.0));
+        let zeroed_width = std::panic::catch_unwind(|| Matrix4::new_orthographic_projection(-5.0, 5.0, 0.0, 0.0, 0.1, 1000.0));
         assert!(zeroed_width.is_err());
 
-        let zeroed_height = std::panic::catch_unwind(|| Matrix4::new_othographic_projection(0.0, 0.0, -5.0, 5.0, 0.1, 1000.0));
+        let zeroed_height = std::panic::catch_unwind(|| Matrix4::new_orthographic_projection(0.0, 0.0, -5.0, 5.0, 0.1, 1000.0));
         assert!(zeroed_height.is_err());
     }
 
