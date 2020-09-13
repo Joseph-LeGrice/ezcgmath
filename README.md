@@ -1,6 +1,8 @@
 # ezcgmath
 
-![build](https://github.com/Joseph-LeGrice/ezcgmath/workflows/build/badge.svg?branch=master)
+[![build](https://github.com/Joseph-LeGrice/ezcgmath/workflows/build/badge.svg?branch=master)](https://github.com/Joseph-LeGrice/ezcgmath/actions)
+[![crates.io](https://img.shields.io/crates/v/ezcgmath)](https://crates.io/crates/ezcgmath)
+[![docs.rs](https://docs.rs/ezcgmath/badge.svg)](https://docs.rs/ezcgmath/)
 
 An extremely simplified linear algebra API, for use with computer graphics.
 
