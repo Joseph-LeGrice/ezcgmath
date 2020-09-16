@@ -13,11 +13,17 @@ impl_mul_scalar!(Matrix2x2, c00, c10, c01, c11);
 impl_approx!(Matrix2x2, c00, c10, c01, c11);
 
 impl Matrix2x2 {
+    /// Creates an instance of a 2x2 identity matrix.
     pub const fn identity() -> Self {
         Self {
             c00: 1.0, c10: 0.0,
             c01: 0.0, c11: 1.0,
         }
+    }
+
+    // Calculates the determinant for this matrix.
+    pub fn determinant(&self) -> Scalar {
+        self.c00 * self.c11 - self.c10 * self.c01
     }
 }
 

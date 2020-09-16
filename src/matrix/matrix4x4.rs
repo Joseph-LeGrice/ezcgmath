@@ -1,6 +1,7 @@
 use crate::{Degrees, Radians, Scalar};
 use crate::vector::*;
 use crate::quaternion::Quaternion;
+use super::Matrix3x3;
 
 /// A 4 x 4 Matrix.
 #[repr(C)]
@@ -111,6 +112,136 @@ impl Matrix4x4 {
             c02: 0.0,   c12: 0.0,   c22: scale, c32: 0.0,
             c03: 0.0,   c13: 0.0,   c23: 0.0,   c33: 1.0,
         }
+    }
+
+    /// Compiles a matrix of minors for this matrix.
+    pub fn matrix_of_minors(&self) -> Matrix4x4 {
+        let c00 = Matrix3x3 {
+            c00: self.c11, c10: self.c21, c20: self.c31,
+            c01: self.c12, c11: self.c22, c21: self.c32,
+            c02: self.c13, c12: self.c23, c22: self.c33,
+        }.determinant();
+        let c10 = Matrix3x3 {
+            c00: self.c01, c10: self.c21, c20: self.c31,
+            c01: self.c02, c11: self.c22, c21: self.c32,
+            c02: self.c03, c12: self.c23, c22: self.c33,
+        }.determinant();
+        let c20 = Matrix3x3 {
+            c00: self.c01, c10: self.c11, c20: self.c31,
+            c01: self.c02, c11: self.c12, c21: self.c32,
+            c02: self.c03, c12: self.c13, c22: self.c33,
+        }.determinant();
+        let c30  = Matrix3x3 {
+            c00: self.c01, c10: self.c11, c20: self.c21,
+            c01: self.c02, c11: self.c12, c21: self.c22,
+            c02: self.c03, c12: self.c13, c22: self.c23,
+        }.determinant();
+
+        let c01 = Matrix3x3 {
+            c00: self.c10, c10: self.c20, c20: self.c30,
+            c01: self.c12, c11: self.c22, c21: self.c32,
+            c02: self.c13, c12: self.c23, c22: self.c33,
+        }.determinant();
+        let c11 = Matrix3x3 {
+            c00: self.c00, c10: self.c20, c20: self.c30,
+            c01: self.c02, c11: self.c22, c21: self.c32,
+            c02: self.c03, c12: self.c23, c22: self.c33,
+        }.determinant();
+        let c21 = Matrix3x3 {
+            c00: self.c00, c10: self.c10, c20: self.c30,
+            c01: self.c02, c11: self.c12, c21: self.c32,
+            c02: self.c03, c12: self.c13, c22: self.c33,
+        }.determinant();
+        let c31  = Matrix3x3 {
+            c00: self.c00, c10: self.c10, c20: self.c20,
+            c01: self.c02, c11: self.c12, c21: self.c22,
+            c02: self.c03, c12: self.c13, c22: self.c23,
+        }.determinant();
+        
+        let c02 = Matrix3x3 {
+            c00: self.c10, c10: self.c20, c20: self.c30,
+            c01: self.c11, c11: self.c21, c21: self.c31,
+            c02: self.c13, c12: self.c23, c22: self.c33,
+        }.determinant();
+        let c12 = Matrix3x3 {
+            c00: self.c00, c10: self.c20, c20: self.c30,
+            c01: self.c01, c11: self.c21, c21: self.c31,
+            c02: self.c03, c12: self.c23, c22: self.c33,
+        }.determinant();
+        let c22 = Matrix3x3 {
+            c00: self.c00, c10: self.c10, c20: self.c30,
+            c01: self.c01, c11: self.c11, c21: self.c31,
+            c02: self.c03, c12: self.c13, c22: self.c33,
+        }.determinant();
+        let c32  = Matrix3x3 {
+            c00: self.c00, c10: self.c10, c20: self.c20,
+            c01: self.c01, c11: self.c11, c21: self.c21,
+            c02: self.c03, c12: self.c13, c22: self.c23,
+        }.determinant();
+        
+        let c03 = Matrix3x3 {
+            c00: self.c10, c10: self.c20, c20: self.c30,
+            c01: self.c11, c11: self.c21, c21: self.c31,
+            c02: self.c12, c12: self.c22, c22: self.c32,
+        }.determinant();
+        let c13 = Matrix3x3 {
+            c00: self.c00, c10: self.c20, c20: self.c30,
+            c01: self.c01, c11: self.c21, c21: self.c31,
+            c02: self.c02, c12: self.c22, c22: self.c32,
+        }.determinant();
+        let c23 = Matrix3x3 {
+            c00: self.c00, c10: self.c10, c20: self.c30,
+            c01: self.c01, c11: self.c11, c21: self.c31,
+            c02: self.c02, c12: self.c12, c22: self.c32,
+        }.determinant();
+        let c33  = Matrix3x3 {
+            c00: self.c00, c10: self.c10, c20: self.c20,
+            c01: self.c01, c11: self.c11, c21: self.c21,
+            c02: self.c02, c12: self.c12, c22: self.c22,
+        }.determinant();
+
+        Matrix4x4 {
+            c00, c10, c20, c30,
+            c01, c11, c21, c31,
+            c02, c12, c22, c32,
+            c03, c13, c23, c33,
+        }
+    }
+    
+    /// Compiles a matrix of cofactors for this matrix.
+    pub fn matrix_of_cofactors(&self) -> Matrix4x4 {
+        Matrix4x4 {
+            c00:  self.c00, c10: -self.c10, c20:  self.c20, c30: -self.c30,
+            c01: -self.c01, c11:  self.c11, c21: -self.c21, c31:  self.c31,
+            c02:  self.c02, c12: -self.c12, c22:  self.c22, c32: -self.c32,
+            c03: -self.c03, c13:  self.c13, c23: -self.c23, c33:  self.c33,
+        }
+    }
+
+    /// Returns a new matrix with the elements transposed.
+    pub fn transpose(&self) -> Matrix4x4 {
+        Matrix4x4 {
+            c00: self.c00, c10: self.c01, c20: self.c02, c30: self.c03,
+            c01: self.c10, c11: self.c11, c21: self.c12, c31: self.c13,
+            c02: self.c20, c12: self.c21, c22: self.c22, c32: self.c23,
+            c03: self.c30, c13: self.c31, c23: self.c32, c33: self.c33,
+        }
+    }
+
+    /// Calculates the determinant for this matrix.
+    pub fn determinant(&self) -> f32 {
+        let minors = self.matrix_of_minors();
+        let cofactors = minors.matrix_of_cofactors();
+        self.c00 * cofactors.c00 + self.c10 * cofactors.c10 + self.c20 * cofactors.c20 + self.c30 * cofactors.c30
+    }
+
+    /// Calculates the Inverse matrix for this matrix.
+    pub fn inverse(&self) -> Matrix4x4 {
+        let minors = self.matrix_of_minors();
+        let cofactors = minors.matrix_of_cofactors();
+        let adjugate = cofactors.transpose();
+        let determinant = self.determinant();
+        adjugate * (1.0 / determinant)
     }
 }
 

@@ -115,6 +115,12 @@ mod matrix2x2 {
         };
         assert_ulps_eq!(A * B, result);
     }
+
+    #[test]
+    fn determinant() {
+        assert_ulps_eq!(A.determinant(), -2.0);
+        assert_ulps_eq!(B.determinant(), -2.0);
+    }
 }
 
 mod matrix3x3 {
@@ -180,6 +186,72 @@ mod matrix3x3 {
             c02: 318.0, c12: 342.0, c22: 366.0,
         };
         assert_ulps_eq!(A * B, result);
+    }
+
+    #[test]
+    fn matrix_of_minors() {
+        assert_ulps_eq!(
+            Matrix3x3 {
+                c00:  1.0, c10:  2.0, c20:  1.0,
+                c01:  6.0, c11: -1.0, c21:  0.0,
+                c02: -1.0, c12: -2.0, c22: -1.0,    
+            }.matrix_of_minors(),
+            Matrix3x3 {
+                c00: 1.0, c10: -6.0, c20: -13.0,
+                c01: 0.0, c11: 0.0, c21: 0.0,
+                c02: 1.0, c12: -6.0, c22: -13.0,
+            }
+        );
+    }
+
+    #[test]
+    fn matrix_of_cofactors() {
+        assert_ulps_eq!(A.matrix_of_cofactors(), Matrix3x3 {
+            c00:  A.c00, c10: -A.c10, c20:  A.c20,
+            c01: -A.c01, c11:  A.c11, c21: -A.c21,
+            c02:  A.c02, c12: -A.c12, c22:  A.c22,
+        });
+        assert_ulps_eq!(B.matrix_of_cofactors(), Matrix3x3 {
+            c00:  B.c00, c10: -B.c10, c20:  B.c20,
+            c01: -B.c01, c11:  B.c11, c21: -B.c21,
+            c02:  B.c02, c12: -B.c12, c22:  B.c22,
+        });
+    }
+
+    #[test]
+    fn transpose() {
+        assert_ulps_eq!(A.transpose(), Matrix3x3 {
+            c00: A.c00, c10: A.c01, c20: A.c02,
+            c01: A.c10, c11: A.c11, c21: A.c12,
+            c02: A.c20, c12: A.c21, c22: A.c22,
+        });
+        assert_ulps_eq!(B.transpose(), Matrix3x3 {
+            c00: B.c00, c10: B.c01, c20: B.c02,
+            c01: B.c10, c11: B.c11, c21: B.c12,
+            c02: B.c20, c12: B.c21, c22: B.c22,
+        });
+    }
+
+    #[test]
+    fn determinant() {
+        assert_ulps_eq!(A.determinant(), 0.0);
+        assert_ulps_eq!(B.determinant(), 0.0);
+    }
+
+    #[test]
+    fn inverse() {
+        assert_ulps_eq!(
+            Matrix3x3 {
+                c00: 12.0, c10: 68.0, c20: 8.0,
+                c01: 68.0, c11: 98.0, c21: 6.0,
+                c02: 7.0, c12: 59.0, c22: 86.0,    
+            }.inverse(),
+            Matrix3x3 {
+                c00: -0.02975909654, c10:  0.01981482574,   c20:  0.001385858348,
+                c01:  0.02139971693, c11: -0.003597334434,  c21: -0.001739694521,
+                c02: -0.01225894911, c12:  0.0008551040868, c22:  0.01270861591,
+            }
+        );
     }
 }
 
@@ -375,5 +447,79 @@ mod matrix4x4 {
             c03: 0.0, c13: 0.0, c23: 0.0, c33: 1.0,
         };
         assert_ulps_eq!(matrix_from_quaternion, result);
+    }
+
+    #[test]
+    fn matrix_of_minors() {
+        assert_ulps_eq!(
+            Matrix4x4 {
+                c00: 13.0, c10: 72.0, c20: 43.0, c30: 34.0,
+                c01: 3.0, c11: 56.0, c21: 17.0, c31: 38.0,
+                c02: 9.0, c12: 10.0, c22: 13.0, c32: 2.0,
+                c03: 1.0, c13: 4.0, c23: 15.0, c33: 36.0,
+                }.matrix_of_minors(),
+                Matrix4x4 {
+                    c00: 22268.0, c10: 476.0, c20: -15988.0, c30: -6096.0,
+                    c01: 19732.0, c11: -4004.0, c21: -17724.0, c31: -6392.0,
+                    c02: -50880.0, c12: -1512.0, c22: 17696.0, c32: 6128.0,
+                    c03: -2624.0, c13: 4592.0, c23: 4592.0, c33: -4920.0,
+                }
+        );
+    }
+
+    #[test]
+    fn matrix_of_cofactors() {
+        assert_ulps_eq!(A.matrix_of_cofactors(), Matrix4x4 {
+            c00:  A.c00, c10: -A.c10, c20:  A.c20, c30: -A.c30,
+            c01: -A.c01, c11:  A.c11, c21: -A.c21, c31:  A.c31,
+            c02:  A.c02, c12: -A.c12, c22:  A.c22, c32: -A.c32,
+            c03: -A.c03, c13:  A.c13, c23: -A.c23, c33:  A.c33,
+        });
+        assert_ulps_eq!(B.matrix_of_cofactors(), Matrix4x4 {
+            c00:  B.c00, c10: -B.c10, c20:  B.c20, c30: -B.c30,
+            c01: -B.c01, c11:  B.c11, c21: -B.c21, c31:  B.c31,
+            c02:  B.c02, c12: -B.c12, c22:  B.c22, c32: -B.c32,
+            c03: -B.c03, c13:  B.c13, c23: -B.c23, c33:  B.c33,
+        });
+    }
+
+    #[test]
+    fn transpose() {
+        assert_ulps_eq!(A.transpose(), Matrix4x4 {
+            c00: A.c00, c10: A.c01, c20: A.c02, c30: A.c03,
+            c01: A.c10, c11: A.c11, c21: A.c12, c31: A.c13,
+            c02: A.c20, c12: A.c21, c22: A.c22, c32: A.c23,
+            c03: A.c30, c13: A.c31, c23: A.c32, c33: A.c33,
+        });
+        assert_ulps_eq!(B.transpose(), Matrix4x4 {
+            c00: B.c00, c10: B.c01, c20: B.c02, c30: B.c03,
+            c01: B.c10, c11: B.c11, c21: B.c12, c31: B.c13,
+            c02: B.c20, c12: B.c21, c22: B.c22, c32: B.c23,
+            c03: B.c30, c13: B.c31, c23: B.c32, c33: B.c33,
+        });
+    }
+
+    #[test]
+    fn determinant() {
+        assert_ulps_eq!(A.determinant(), 0.0);
+        assert_ulps_eq!(B.determinant(), 0.0);
+    }
+
+    #[test]
+    fn inverse() {
+        assert_ulps_eq!(
+            Matrix4x4 {
+                c00: 42.0, c10: 5.0, c20: 16.0, c30: 53.0,
+                c01: -21.0, c11: 125.0, c21: 6.0, c31: -65.0,
+                c02: -6.0, c12: 53.0, c22: 23.0, c32: -32.0,
+                c03: 63.0, c13: -3.0, c23: -23.0, c33: 51.0,
+            }.inverse(),
+            Matrix4x4 {
+                c00: -0.02144504449, c10: -0.01894554558, c20: 0.04831673192, c30: 0.02845612386,
+                c01: 0.01240283943, c11: 0.0147995753, c21: -0.01748989292, c31: -0.005001071941,
+                c02: 0.00992408168, c12: -0.01415471363, c22: 0.03197835075, c32: -0.008288735115,
+                c03: 0.03169608235, c13: 0.01789038596, c23: -0.04629258279, c33: -0.01957607699,
+            }
+        );
     }
 }
