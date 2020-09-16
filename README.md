@@ -28,9 +28,9 @@ you would write these transformations in "reading order":
 use ezcgmath::prelude::*;
 
 let position_vector = Vector3::new(5.0, 0.0, 0.0);
-let scale_matrix = Matrix4::from_nonuniform_scale(&Vector3::new(2.0, 1.0, 1.0));
+let scale_matrix = Matrix4x4::from_nonuniform_scale(&Vector3::new(2.0, 1.0, 1.0));
 let rotation_matrix = Quaternion::from_axis_angle(&Vector3::new(0.0, 1.0, 0.0), &Degrees(90.0));
-let translation_matrix = Matrix4::from_translation(&Vector3::new(0.0, 0.0, 10.0));
+let translation_matrix = Matrix4x4::from_translation(&Vector3::new(0.0, 0.0, 10.0));
 let transformed_vector = position_vector * scale_matrix * rotation_matrix * translation_matrix;
 ```
 

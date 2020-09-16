@@ -74,7 +74,7 @@ mod vector2 {
 }
 
 mod vector3 {
-    use ezcgmath::matrix::{Matrix3, Matrix4};
+    use ezcgmath::matrix::{Matrix3x3, Matrix4x4};
     use ezcgmath::vector::{Vector3, Vector4};
 
     const A: Vector3 = Vector3::new(2.0, 4.0, 6.0);
@@ -160,9 +160,9 @@ mod vector3 {
     }
 
     #[test]
-    fn multiply_matrix3() {
+    fn multiply_Matrix3x3() {
         let mut lhs = Vector3::new(2.0, 4.0, 6.0);
-        let rhs = Matrix3 {
+        let rhs = Matrix3x3 {
             c00: 1.0, c10: 2.0, c20: 3.0,
             c01: 4.0, c11: 5.0, c21: 6.0,
             c02: 7.0, c12: 8.0, c22: 9.0,
@@ -176,9 +176,9 @@ mod vector3 {
     }
 
     #[test]
-    fn multiply_matrix4() {
+    fn multiply_Matrix4x4() {
         let mut lhs = Vector3::new(2.0, 4.0, 6.0);
-        let rhs = Matrix4 {
+        let rhs = Matrix4x4 {
             c00: 1.0, c10: 2.0, c20: 3.0, c30: 4.0,
             c01: 5.0, c11: 6.0, c21: 7.0, c31: 8.0,
             c02: 9.0, c12: 10.0, c22: 11.0, c32: 12.0,
@@ -195,14 +195,14 @@ mod vector3 {
     #[test]
     fn translation() {
         let lhs = Vector3::new(0.0, 0.0, 0.0);
-        let rhs = Matrix4::from_translation(&Vector3::new(10.0, 0.0, 0.0));
+        let rhs = Matrix4x4::from_translation(&Vector3::new(10.0, 0.0, 0.0));
         assert_ulps_eq!(lhs * rhs, Vector3::new(10.0, 0.0, 0.0));
     }
 
     #[test]
     fn scale() {
         let lhs = Vector3::new(2.0, 5.0, 10.0);
-        let rhs = Matrix4::from_scale(2.0);
+        let rhs = Matrix4x4::from_scale(2.0);
         assert_ulps_eq!(lhs * rhs, Vector3::new(4.0, 10.0, 20.0));
     }
 
@@ -215,7 +215,7 @@ mod vector3 {
 
 mod vector4 {
     use ezcgmath::vector::{Vector3, Vector4};
-    use ezcgmath::matrix::Matrix4;
+    use ezcgmath::matrix::Matrix4x4;
 
     const A: Vector4 = Vector4::new(2.0, 4.0, 6.0, 8.0);
     const B: Vector4 = Vector4::new(5.0, 10.0, 15.0, 20.0);
@@ -271,12 +271,12 @@ mod vector4 {
     }
 
     #[test]
-    fn multiply_matrix4() {
+    fn multiply_Matrix4x4() {
         // This single test verifies a swath of things. Because Vector3s and Quaternions are ultimately
-        // turned into Vector4s and Matrix4s (respectfully), a lot of multiplication involving them boils
+        // turned into Vector4s and Matrix4x4s (respectfully), a lot of multiplication involving them boils
         // down to this. There are seperate tests that check the conversions are working properly.
         let mut lhs = Vector4::new(2.0, 4.0, 6.0, 1.0);
-        let rhs = Matrix4 {
+        let rhs = Matrix4x4 {
             c00: 1.0, c10: 2.0, c20: 3.0, c30: 4.0,
             c01: 5.0, c11: 6.0, c21: 7.0, c31: 8.0,
             c02: 9.0, c12: 10.0, c22: 11.0, c32: 12.0,

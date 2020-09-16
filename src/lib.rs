@@ -24,9 +24,9 @@
 //! use ezcgmath::approx::*;
 //!
 //! let position_vector = Vector3::new(5.0, 0.0, 0.0);
-//! let scale_matrix = Matrix4::from_nonuniform_scale(&Vector3::new(2.0, 1.0, 1.0));
+//! let scale_matrix = Matrix4x4::from_nonuniform_scale(&Vector3::new(2.0, 1.0, 1.0));
 //! let rotation_matrix = Quaternion::from_axis_angle(&Vector3::new(0.0, 1.0, 0.0), Degrees(90.0));
-//! let translation_matrix = Matrix4::from_translation(&Vector3::new(0.0, 0.0, -10.0));
+//! let translation_matrix = Matrix4x4::from_translation(&Vector3::new(0.0, 0.0, -10.0));
 //! let transformed_vector = position_vector * scale_matrix * rotation_matrix * translation_matrix;
 //! ```
 //!
@@ -90,7 +90,7 @@ pub mod vector;
 /// The most common types you will use in this library, re-exported under a single module.
 pub mod prelude {
     pub use crate::{Degrees, Radians};
-    pub use crate::matrix::Matrix4;
+    pub use crate::matrix::Matrix4x4;
     pub use crate::quaternion::Quaternion;
     pub use crate::vector::Vector3;
 }

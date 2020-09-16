@@ -1,6 +1,6 @@
 use crate::{Scalar, Degrees, Radians};
 use crate::vector::Vector3;
-use crate::matrix::{Matrix3, Matrix4};
+use crate::matrix::{Matrix3x3, Matrix4x4};
 
 /// A Quaternion is used to represent a rotation. By representing a rotation this way,
 /// we can prevent gimbal locking and have better interpolation between different orientations
@@ -38,7 +38,7 @@ impl Quaternion {
 
     /// Create a rotation that points in a given forward and direction, with a defined upwards direction
     pub fn from_look_at(forward: &Vector3, up: &Vector3) -> Self {
-        let mat = Matrix3::from_look_at(*forward, *up);
+        let mat = Matrix3x3::from_look_at(*forward, *up);
         let tr = mat.c00 + mat.c11 + mat.c22;
         let mut result = {
             if tr >= 0.0 {
@@ -168,13 +168,13 @@ impl std::ops::MulAssign for Quaternion {
     }
 }
 
-impl std::ops::Mul<Matrix4> for Quaternion {
-    type Output = Matrix4;
+impl std::ops::Mul<Matrix4x4> for Quaternion {
+    type Output = Matrix4x4;
 
-    fn mul(self, rhs: Matrix4) -> Matrix4 {
-        Matrix4::from(self) * rhs
+    fn mul(self, rhs: Matrix4x4) -> Matrix4x4 {
+        Matrix4x4::from(self) * rhs
     }
 }
 
-// TODO: Add Matrix4 -> Quaternion Conversion?
-// Then We could implement std::ops::MulAssign<Matrix4> for Quaternion
+// TODO: Add Matrix4x4 -> Quaternion Conversion?
+// Then We could implement std::ops::MulAssign<Matrix4x4> for Quaternion
