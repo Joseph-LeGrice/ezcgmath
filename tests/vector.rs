@@ -160,7 +160,7 @@ mod vector3 {
     }
 
     #[test]
-    fn multiply_Matrix3x3() {
+    fn multiply_matrix3x3() {
         let mut lhs = Vector3::new(2.0, 4.0, 6.0);
         let rhs = Matrix3x3 {
             c00: 1.0, c10: 2.0, c20: 3.0,
@@ -176,7 +176,7 @@ mod vector3 {
     }
 
     #[test]
-    fn multiply_Matrix4x4() {
+    fn multiply_matrix4x4() {
         let mut lhs = Vector3::new(2.0, 4.0, 6.0);
         let rhs = Matrix4x4 {
             c00: 1.0, c10: 2.0, c20: 3.0, c30: 4.0,
@@ -271,7 +271,7 @@ mod vector4 {
     }
 
     #[test]
-    fn multiply_Matrix4x4() {
+    fn multiply_matrix4x4() {
         // This single test verifies a swath of things. Because Vector3s and Quaternions are ultimately
         // turned into Vector4s and Matrix4x4s (respectfully), a lot of multiplication involving them boils
         // down to this. There are seperate tests that check the conversions are working properly.
