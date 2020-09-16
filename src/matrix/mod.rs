@@ -1,4 +1,6 @@
 
+mod matrix1x3;
+pub use self::matrix1x3::*;
 mod matrix2x2;
 pub use self::matrix2x2::*;
 mod matrix3x3;

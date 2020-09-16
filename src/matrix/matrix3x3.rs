@@ -1,3 +1,4 @@
+use super::Matrix1x3;
 use crate::Scalar;
 use crate::vector::*;
 
@@ -78,5 +79,17 @@ impl std::ops::MulAssign for Matrix3x3 {
         self.c00 = c00; self.c10 = c10; self.c20 = c20;
         self.c01 = c01; self.c11 = c11; self.c21 = c21;
         self.c02 = c02; self.c12 = c12; self.c22 = c22;
+    }
+}
+
+impl std::ops::Mul<Matrix1x3> for Matrix3x3 {
+    type Output = Matrix1x3;
+
+    fn mul(self, rhs: Matrix1x3) -> Matrix1x3 {
+        Matrix1x3 {
+            c00: self.c00 * rhs.c00 + self.c10 * rhs.c01 + self.c20 * rhs.c02,
+            c01: self.c01 * rhs.c00 + self.c11 * rhs.c01 + self.c21 * rhs.c02,
+            c02: self.c02 * rhs.c00 + self.c12 * rhs.c01 + self.c22 * rhs.c02,
+        }
     }
 }

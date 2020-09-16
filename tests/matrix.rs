@@ -1,6 +1,62 @@
 #[macro_use]
 extern crate approx;
 
+mod matrix1x3 {
+    use ezcgmath::matrix::Matrix1x3;
+
+    const A: Matrix1x3 = Matrix1x3 {
+        c00: 1.0,
+        c01: 2.0,
+        c02: 3.0,
+    };
+
+    const B: Matrix1x3 = Matrix1x3 {
+        c00: 4.0,
+        c01: 5.0,
+        c02: 6.0,
+    };
+
+    #[test]
+    fn add() {
+        let result = Matrix1x3 {
+            c00: 5.0,
+            c01: 7.0,
+            c02: 9.0,
+        };
+        assert_ulps_eq!(A + B, result);
+        let mut mat = A.clone();
+        mat += B;
+        assert_ulps_eq!(mat, result);
+    }
+
+    #[test]
+    fn subtract() {
+        let result = Matrix1x3 {
+            c00: -3.0,
+            c01: -3.0,
+            c02: -3.0,
+        };
+        assert_ulps_eq!(A - B, result);
+        let mut mat = A.clone();
+        mat -= B;
+        assert_ulps_eq!(mat, result);
+    }
+
+    #[test]
+    fn multiply_scalar() {
+        let scalar = 2.0;
+        let result = Matrix1x3 {
+            c00: 2.0,
+            c01: 4.0,
+            c02: 6.0,
+        };
+        assert_ulps_eq!(A * scalar, result);
+        let mut mat = A.clone();
+        mat *= scalar;
+        assert_ulps_eq!(mat, result);
+    }
+}
+
 mod matrix2x2 {
     use ezcgmath::matrix::Matrix2x2;
 
